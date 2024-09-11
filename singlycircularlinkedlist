@@ -1,0 +1,196 @@
+#include<stdio.h>
+#include<stdlib.h>
+struct node{
+    int data;
+    struct node*next;
+    
+};
+struct node*head=NULL;
+struct node*tail=NULL;
+int count=0;
+struct node*getnode(char *str){
+    struct node*newnode=(struct node*)malloc(sizeof(struct node));
+    printf("%s\n",str);
+    scanf("%d",&newnode->data);
+    newnode->next=NULL;
+    count++;
+    return newnode;
+}
+void insert_at_beginning(){
+    int choice = 1;
+    while(choice){
+       struct node*newnode=getnode("Enter the value of node to insert at beginning:\n");
+       if(head==NULL){
+           head=tail=newnode;
+           head->next=head;
+       }
+       else{
+           newnode->next=head;
+           tail->next=newnode;
+           head=newnode;
+       }
+       printf("Do you want to insert more nodes at beginning?(0/1):\n");
+       scanf("%d",&choice);
+    }
+}
+void insert_at_end(){
+    int choice =1;
+    while(choice){
+        struct node*newnode=getnode("Enter the value of node to insert at end:\n");
+        if(head==NULL){
+            head=tail=newnode;
+            head->next=head;
+        }
+        else{
+            tail->next=newnode;
+            newnode->next=head;
+            tail=newnode;
+        }
+        printf("Do you want to insert more nodes at end?(0/1):\n");
+        scanf("%d",&choice);
+    }
+}
+void insert_at_specific_pos(){
+    int pos;
+    int i =1;
+    printf("Enter the position where you want to insert node:\n");
+    scanf("%d",&pos);
+    if(pos<1||pos>count){
+        printf("Invalid position!\n");
+    }
+    else{
+        struct node*temp=head;
+        if(head==NULL){
+             struct node*newnode=getnode("Enter the value of node to insert at specific position:\n");
+            head=tail=newnode;
+            head->next=head;
+        }
+        else if(pos==1){
+            insert_at_beginning();
+        }
+        else if(pos==count){
+            insert_at_end();
+        }
+        else{
+           struct node*newnode=getnode("Enter the value of node to insert at specific position:\n");
+           while(i<pos-1){
+               temp=temp->next;
+               i++;
+           }
+           newnode->next=temp->next;
+           temp->next=newnode;
+           count++;
+        }
+        
+    }
+}
+void delete_from_beginning(){
+    int choice=1;
+    while(choice){
+        struct node*temp=head;
+        head=temp->next;
+        tail->next=temp->next;
+        free(temp);
+        temp=NULL;
+        count--;
+        if (head == NULL) 
+        break; 
+        printf("Do you want to delete more nodes from beginning?(0/1):\n");
+        scanf("%d",&choice);
+    }
+}
+void delete_from_end(){
+    int choice = 1;
+    while(choice){
+        struct node*temp=head;
+        struct node*prev=NULL;
+        if(head==tail){
+            head=tail=NULL;
+        }
+        else{
+           while(temp->next!=head){
+               prev=temp;
+               temp=temp->next;
+           }
+           prev->next=head;
+           tail=prev;
+        }
+        free(temp);
+        temp=NULL;
+        count--;
+        if (head == NULL) break; 
+        printf("Do you want to delete more nodes from end?(0/1):\n");
+        scanf("%d",&choice);
+    }
+}
+void delete_from_specific_pos(){
+    int pos;
+    int i=1;
+    printf("Enter the position to from where you want to delete the node:\n");
+    scanf("%d",&pos);
+    if(pos<1||pos>count){
+        printf("Invalid position\n");
+    }
+    else if (pos==1){
+        delete_from_beginning();
+    }
+    else if(pos==count){
+        delete_from_end();
+    }
+    else{
+        struct node*temp=head;
+        struct node*prev= NULL;
+        while(i<pos){
+            prev=temp;
+            temp=temp->next;
+            i++;
+        }
+        prev->next=temp->next;
+        free(temp);
+        temp=NULL;
+        count--;
+    }
+}
+void print_scll(struct node*head){
+    struct node*temp=head->next;
+    printf("SINGLY CIRCULAR LINKED LIST:");
+    printf("%d->",head->data);
+    while(temp!=head){
+        printf("%d->",temp->data);
+        temp=temp->next;
+    }
+    printf("%d\n",head->data);
+    
+}
+
+int main(){
+    int choice = 1;
+    while(choice){
+        struct node*newnode;
+        newnode=getnode("Enter the value of node:\n");
+        if(head==NULL){
+            head=tail=newnode;
+            head->next=head;
+        }
+        else{
+            tail->next=newnode;
+            tail=newnode;
+            tail->next=head;
+        }
+        printf("Do you want to add more nodes?(0/1):\n");
+        scanf("%d",&choice);
+    }
+    print_scll(head);
+    insert_at_beginning();
+    print_scll(head);
+    insert_at_end();
+    print_scll(head);
+    insert_at_specific_pos();
+    print_scll(head);
+    delete_from_beginning();
+    print_scll(head);
+    delete_from_end();
+    print_scll(head);
+    delete_from_specific_pos();
+    print_scll(head);
+}
